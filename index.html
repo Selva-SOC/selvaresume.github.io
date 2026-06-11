@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selvamoorthy M — Senior Security Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #060a0f;
+    --surface: #0c1219;
+    --surface2: #111a24;
+    --border: #1c2d3f;
+    --accent: #00d4ff;
+    --accent2: #ff4d6d;
+    --accent3: #00ff9d;
+    --text: #c8dde8;
+    --muted: #5a7a8a;
+    --heading: #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13.5px;
+    line-height: 1.7;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s, opacity 0.2s;
+    mix-blend-mode: screen;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1.5px solid var(--accent);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.18s ease, width 0.2s, height 0.2s, border-color 0.2s;
+    opacity: 0.5;
+  }
+  .cursor-ring.hovered { width: 56px; height: 56px; border-color: var(--accent2); opacity: 0.8; }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Glow orb */
+  .orb {
+    position: fixed;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    transition: transform 0.4s ease;
+    top: -100px; left: -100px;
+  }
+
+  /* Layout */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── HEADER ── */
+  header {
+    padding: 70px 0 50px;
+    position: relative;
+  }
+
+  .header-tag {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  .header-tag::before { content: '[ '; }
+  .header-tag::after { content: ' ]'; }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(64px, 10vw, 110px);
+    line-height: 0.9;
+    color: var(--heading);
+    letter-spacing: 0.02em;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.2s forwards;
+  }
+
+  h1 span {
+    -webkit-text-stroke: 1px var(--accent);
+    color: transparent;
+  }
+
+  .subtitle {
+    margin-top: 18px;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.35s forwards;
+  }
+
+  .contact-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 24px;
+    margin-top: 28px;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.5s forwards;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: none;
+  }
+  .contact-item:hover { color: var(--accent); }
+  .contact-item .icon { color: var(--accent); font-size: 14px; }
+
+  /* divider */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent) 0%, transparent 60%);
+    margin: 10px 0 50px;
+    opacity: 0;
+    animation: fadeIn 0.8s 0.65s forwards;
+  }
+
+  /* ── SUMMARY ── */
+  .summary-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    padding: 24px 28px;
+    margin-bottom: 52px;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.7s 0.7s forwards;
+    transition: border-left-color 0.3s;
+  }
+  .summary-block:hover { border-left-color: var(--accent3); }
+  .summary-block p { color: var(--text); line-height: 1.85; }
+
+  /* ── SECTION TITLES ── */
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px;
+    letter-spacing: 0.05em;
+    color: var(--heading);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── SKILLS GRID ── */
+  .skills-section { margin-bottom: 56px; }
+
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .skill-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s, background 0.25s;
+    cursor: none;
+  }
+  .skill-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--accent);
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.3s;
+  }
+  .skill-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+  .skill-card:hover::before { transform: scaleY(1); }
+
+  .skill-category {
+    font-family: 'Syne', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .skill-card:hover .tag { border-color: rgba(0,212,255,0.3); }
+
+  /* ── TIMELINE / EXPERIENCE ── */
+  .experience-section { margin-bottom: 56px; }
+
+  .timeline { position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), var(--border) 70%, transparent);
+  }
+
+  .job {
+    padding-left: 32px;
+    margin-bottom: 40px;
+    position: relative;
+    opacity: 0;
+    transform: translateX(-18px);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+  .job.visible { opacity: 1; transform: translateX(0); }
+
+  .job::before {
+    content: '';
+    position: absolute;
+    left: -5px; top: 8px;
+    width: 11px; height: 11px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px rgba(0,212,255,0.3);
+  }
+
+  .job-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 2px;
+  }
+
+  .job-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--heading);
+  }
+
+  .job-period {
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+    padding: 3px 10px;
+    border: 1px solid rgba(0,212,255,0.2);
+    white-space: nowrap;
+  }
+
+  .job-company {
+    font-size: 12px;
+    color: var(--accent2);
+    letter-spacing: 0.05em;
+    margin-bottom: 14px;
+  }
+
+  .job-bullets {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .job-bullets li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .job-bullets li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 16px;
+    line-height: 1.4;
+  }
+
+  /* ── CERTS ── */
+  .certs-section { margin-bottom: 56px; }
+
+  .certs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 12px;
+  }
+
+  .cert-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .cert-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,212,255,0.04), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .cert-card:hover { transform: translateY(-3px); border-color: var(--accent3); box-shadow: 0 8px 24px rgba(0,255,157,0.08); }
+  .cert-card:hover::after { opacity: 1; }
+
+  .cert-icon {
+    font-size: 20px;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  .cert-name {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  /* ── EDUCATION ── */
+  .education-section { margin-bottom: 70px; }
+
+  .edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+
+  .edu-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s, border-color 0.25s;
+    cursor: none;
+  }
+  .edu-card:hover { transform: translateY(-3px); border-color: var(--accent2); }
+
+  .edu-degree {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--heading);
+    margin-bottom: 5px;
+  }
+  .edu-school {
+    font-size: 12px;
+    color: var(--accent2);
+    margin-bottom: 4px;
+  }
+  .edu-year {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    text-align: center;
+  }
+
+  .footer-text {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
+  /* Scanline effect */
+  @keyframes scan {
+    0%   { transform: translateY(-100%); }
+    100% { transform: translateY(100vh); }
+  }
+  .scanline {
+    position: fixed;
+    width: 100%; height: 2px;
+    background: linear-gradient(transparent, rgba(0,212,255,0.04), transparent);
+    pointer-events: none;
+    z-index: 9;
+    animation: scan 8s linear infinite;
+  }
+
+  /* Sections fade on scroll */
+  .fade-section {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-section.visible { opacity: 1; transform: translateY(0); }
+
+  /* Print */
+  @media print {
+    body { background: white; color: #111; cursor: auto; }
+    .cursor, .cursor-ring, .orb, .scanline { display: none; }
+    body::before { display: none; }
+    .job { opacity: 1; transform: none; }
+    .fade-section { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="orb" id="orb"></div>
+<div class="scanline"></div>
+
+<div class="container">
+
+  <!-- ── HEADER ── -->
+  <header>
+    <div class="header-tag">Security Engineer · SOC Operations · Threat Response</div>
+    <h1>Selvamoor<span>thy</span> M</h1>
+    <div class="subtitle">7 Years · L3 Escalations · SIEM · EDR · Threat Hunting</div>
+
+    <div class="contact-bar">
+      <a class="contact-item" href="mailto:selvamoorthy.contact@gmail.com">
+        <span class="icon">✉</span> selvamoorthy.contact@gmail.com
+      </a>
+      <a class="contact-item" href="tel:+919600020835">
+        <span class="icon">✆</span> +91 9600020835
+      </a>
+      <a class="contact-item" href="https://linkedin.com/in/selvacybersecurity" target="_blank">
+        <span class="icon">↗</span> linkedin.com/in/selvacybersecurity
+      </a>
+      <span class="contact-item">
+        <span class="icon">◎</span> Bengaluru, Karnataka
+      </span>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- ── SUMMARY ── -->
+  <div class="summary-block fade-section">
+    <p>Cybersecurity professional with 7 years of hands-on experience in Security Operations, Threat Detection and Response, and Incident Investigation. Proven ability to own the full incident response lifecycle — from alert triage and log correlation to threat hunting, IOC analysis, and SOAR-driven automations. Experienced in handling complex L3 escalations, conducting deep-dive investigations, and driving detection improvements in fast-paced, product-focused environments.</p>
+  </div>
+
+  <!-- ── SKILLS ── -->
+  <section class="skills-section fade-section">
+    <div class="section-title">
+      <span class="section-num">01 /</span> Technical Skills
+    </div>
+    <div class="skills-grid" id="skillsGrid"></div>
+  </section>
+
+  <!-- ── EXPERIENCE ── -->
+  <section class="experience-section fade-section">
+    <div class="section-title">
+      <span class="section-num">02 /</span> Experience
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <!-- ── CERTIFICATIONS ── -->
+  <section class="certs-section fade-section">
+    <div class="section-title">
+      <span class="section-num">03 /</span> Certifications
+    </div>
+    <div class="certs-grid" id="certsGrid"></div>
+  </section>
+
+  <!-- ── EDUCATION ── -->
+  <section class="education-section fade-section">
+    <div class="section-title">
+      <span class="section-num">04 /</span> Education
+    </div>
+    <div class="edu-grid" id="eduGrid"></div>
+  </section>
+
+  <footer>
+    <div class="footer-text">SELVAMOORTHY M · SENIOR SECURITY ENGINEER · BENGALURU 2026</div>
+  </footer>
+
+</div>
+
+<script>
+/* ── DATA ── */
+const skills = [
+  { cat: 'SIEM', tags: ['Splunk', 'Google Chronicle'] },
+  { cat: 'Endpoint Security', tags: ['CrowdStrike Falcon', 'Sophos'] },
+  { cat: 'UEBA', tags: ['Exabeam', 'Splunk UBA'] },
+  { cat: 'Email Security', tags: ['Mimecast', 'Proofpoint', 'Vade Security', 'KnowBe4 PhishER'] },
+  { cat: 'Identity & Data', tags: ['Azure AD', 'Varonis Data Security', 'CyberArk'] },
+  { cat: 'Threat Management', tags: ['Threat Hunting', 'IOC Sweeps', 'OSINT', 'Malware Removal (RTR)'] },
+  { cat: 'Frameworks', tags: ['IR Lifecycle', 'MITRE ATT&CK', 'SOC Architecture', 'Use-Case Dev'] },
+  { cat: 'ITSM', tags: ['ServiceNow', 'JIRA'] },
+  { cat: 'Vulnerability Mgmt', tags: ['Qualys VM', 'Global IT Asset Inventory'] },
+];
+
+const experience = [
+  {
+    title: 'Solution Delivery Lead',
+    company: 'Deloitte USI, Bengaluru',
+    period: 'Aug 2022 – Present',
+    bullets: [
+      'Acted as L3 escalation point for complex security incidents — deep-dive investigations involving multi-vector attacks, lateral movement, and APTs.',
+      'Owned end-to-end incident response for high-severity cases: triage, evidence collection, containment, root-cause analysis, and post-incident reporting.',
+      'Performed in-depth log correlation and forensic analysis across SIEM, EDR, and UBA platforms to reconstruct attack timelines and determine blast radius.',
+      'Executed malware containment and removal via CrowdStrike Real-Time Response (RTR); proactive IOC sweeps to neutralise threats pre-escalation.',
+      'Investigated anomalous user behaviour using Exabeam; managed Azure AD risky user monitoring and drove identity risk remediation.',
+      'Led use-case development lifecycle — authored detection logic, tested against real-world scenarios, tuned false positives, deployed to production.',
+      'Built Splunk lookups, macros, and scheduled searches to automate repetitive SOC workflows and accelerate investigation turnaround.',
+      'Performed proactive threat hunting; mapped findings to MITRE ATT&CK and proposed new detection use cases to close coverage gaps.',
+      'Advised on SOC architecture gaps; contributed to runbooks, SOPs, and operational framework improvements.',
+      'Mentored L1/L2 analysts on triage techniques and hosted knowledge-sharing sessions to raise team-wide detection capability.',
+    ],
+  },
+  {
+    title: 'Cyber Security Engineer',
+    company: 'Tata Consultancy Services',
+    period: 'Jul 2021 – Aug 2022',
+    bullets: [
+      'Real-time monitoring, triage, investigation, and escalation of security events from multiple log sources using SIEM and EDR platforms.',
+      'Investigated malicious phishing emails, domains, and IPs using OSINT tools; recommended and actioned appropriate blocking measures.',
+      'Conducted log analysis using Splunk; identified suspicious activity via SIEM/EDR and analysed network traffic to assess threat impact.',
+      'Evaluated and executed incident escalations per the IR lifecycle (detection, triage, analysis, mitigation, reporting, documentation).',
+      'Utilised threat intelligence tools for daily cyber operations; produced intel analysis on threat actors, IOCs, and vulnerabilities.',
+      'Created and maintained KPI reports and weekly/monthly operational metrics for client reporting.',
+    ],
+  },
+  {
+    title: 'Senior Security Engineer',
+    company: 'GAVS Technologies',
+    period: 'Apr 2019 – Jul 2021',
+    bullets: [
+      'Monitored and investigated security events; investigated phishing emails, malicious domains, and IPs using OSINT tools.',
+      'Conducted log analysis using Splunk; identified suspicious/malicious activity via SIEM and EDR platforms.',
+      'Performed incident handling, escalation, and documentation in line with the incident response lifecycle.',
+      'Researched emerging threats and vulnerabilities through security blogs and threat intelligence feeds.',
+      'Created and maintained KPI and operational reports on a weekly and monthly cadence.',
+    ],
+  },
+];
+
+const certs = [
+  { icon: '🦅', name: 'CrowdStrike Certified Falcon Responder (CCFR)' },
+  { icon: '🦅', name: 'CrowdStrike Certified Falcon Hunter (CCFH)' },
+  { icon: '🛡️', name: 'Certified Ethical Hacker (CEH)' },
+  { icon: '📊', name: 'Splunk 7.x Fundamentals' },
+  { icon: '📊', name: 'Splunk UBA' },
+  { icon: '🔐', name: 'CyberArk Trustee' },
+  { icon: '🔍', name: 'Qualys Certified Specialist – Vulnerability Management' },
+  { icon: '🖥️', name: 'Qualys – Global IT Asset Inventory & Management' },
+];
+
+const education = [
+  { degree: 'M.Sc – Cyber Forensics & Information Security', school: 'University of Madras, Chennai', year: '2023 – 2025' },
+  { degree: 'B.Tech – Mechanical Engineering', school: 'Veltech High-tech Engineering College, Chennai', year: '2014 – 2018' },
+  { degree: 'HSC', school: 'Madras Christian College Higher Secondary School', year: '2012 – 2014' },
+];
+
+/* ── RENDER ── */
+// Skills
+const sg = document.getElementById('skillsGrid');
+skills.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'skill-card';
+  card.innerHTML = `<div class="skill-category">${s.cat}</div><div class="skill-tags">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>`;
+  sg.appendChild(card);
+});
+
+// Experience
+const tl = document.getElementById('timeline');
+experience.forEach((job, i) => {
+  const el = document.createElement('div');
+  el.className = 'job';
+  el.innerHTML = `
+    <div class="job-header">
+      <div class="job-title">${job.title}</div>
+      <div class="job-period">${job.period}</div>
+    </div>
+    <div class="job-company">${job.company}</div>
+    <ul class="job-bullets">${job.bullets.map(b => `<li>${b}</li>`).join('')}</ul>
+  `;
+  tl.appendChild(el);
+});
+
+// Certs
+const cg = document.getElementById('certsGrid');
+certs.forEach(c => {
+  const card = document.createElement('div');
+  card.className = 'cert-card';
+  card.innerHTML = `<div class="cert-icon">${c.icon}</div><div class="cert-name">${c.name}</div>`;
+  cg.appendChild(card);
+});
+
+// Education
+const eg = document.getElementById('eduGrid');
+education.forEach(e => {
+  const card = document.createElement('div');
+  card.className = 'edu-card';
+  card.innerHTML = `<div class="edu-degree">${e.degree}</div><div class="edu-school">${e.school}</div><div class="edu-year">${e.year}</div>`;
+  eg.appendChild(card);
+});
+
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx + 'px';
+  cursor.style.top = my + 'px';
+});
+
+(function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+
+document.querySelectorAll('a, .skill-card, .cert-card, .edu-card').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
+});
+
+/* ── ORB ── */
+const orb = document.getElementById('orb');
+document.addEventListener('mousemove', e => {
+  orb.style.transform = `translate(${e.clientX * 0.05}px, ${e.clientY * 0.05}px)`;
+});
+
+/* ── SCROLL ANIMATIONS ── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.fade-section, .job').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
